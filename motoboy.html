@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feira Fácil - Entregador</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Fixo Verde -->
+        <header class="main-header">
+            <div class="user-profile" onclick="openProfileScreen()" style="cursor: pointer;">
+                <div class="avatar">
+                    <i class="fas fa-motorcycle"></i>
+                </div>
+                <div class="user-info">
+                    <span id="header-user-name" class="greeting">Olá, Carlos!</span>
+                    <span class="sub-greeting">Entregador Parceiro</span>
+                </div>
+            </div>
+            <button class="icon-btn notification-btn" onclick="toggleNotificationsModal()">
+                <i class="fas fa-bell"></i>
+                <span id="notification-badge" class="badge-count">1</span>
+            </button>
+        </header>
+
+        <!-- TELA 1: PEDIDOS / INÍCIO DO MOTOBOY -->
+        <main id="home-screen" class="screen active">
+            <!-- Card de Controle de Status (Online / Offline) -->
+            <div class="driver-status-card" id="status-card">
+                <div class="status-info">
+                    <div class="status-indicator" id="status-dot"></div>
+                    <div>
+                        <h3 id="status-title">Você está Offline</h3>
+                        <p id="status-desc">Fique online para receber ofertas de entregas na sua região.</p>
+                    </div>
+                </div>
+
+                <label class="switch-toggle">
+                    <input type="checkbox" id="online-toggle" onchange="toggleDriverStatus(this)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <!-- Resumo de Ganhos do Dia (Fica Oculto durante Entrega Ativa) -->
+            <section id="today-summary-section" class="section-container">
+                <div class="section-header">
+                    <h3>Resumo de Hoje</h3>
+                </div>
+                <div class="driver-stats-grid">
+                    <div class="stat-box">
+                        <i class="fas fa-wallet"></i>
+                        <span class="stat-value" id="today-earnings">R$ 0,00</span>
+                        <span class="stat-label">Ganhos</span>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fas fa-box"></i>
+                        <span class="stat-value" id="today-deliveries">0</span>
+                        <span class="stat-label">Entregas</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Entrega Ativa -->
+            <section class="section-container" style="margin-top: 10px;">
+                <div class="section-header">
+                    <h3>Entrega em Andamento</h3>
+                </div>
+                <div id="active-delivery-container">
+                    <div class="empty-list" style="padding: 30px 0;">
+                        <i class="fas fa-motorcycle"></i>
+                        <p>Nenhuma entrega em andamento no momento.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- TELA 2: HISTÓRICO DE ENTREGAS -->
+        <main id="history-screen" class="screen">
+            <div class="screen-title-bar">
+                <h2>Histórico de Entregas</h2>
+            </div>
+
+            <div class="section-container">
+                <div id="completed-deliveries-container" class="orders-list"></div>
+            </div>
+        </main>
+
+        <!-- TELA 3: PERFIL DO ENTREGADOR -->
+        <main id="profile-screen" class="screen">
+            <div class="screen-title-bar-centered" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px;">
+                <button class="back-btn" onclick="closeProfileScreen()" style="background: none; border: none; font-size: 18px; color: #2e7d32; cursor: pointer;">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 class="centered-title" style="font-size: 18px; color: #222;">Meu Perfil</h2>
+                <div style="width: 24px;"></div>
+            </div>
+
+            <div class="profile-container" style="padding: 0 20px;">
+                <div class="profile-header-card" style="text-align: center; margin-bottom: 20px;">
+                    <div class="profile-avatar-large" style="width: 70px; height: 70px; background: #e8f5e9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; color: #2e7d32; font-size: 32px;">
+                        <i class="fas fa-motorcycle"></i>
+                    </div>
+                    <h3 id="profile-display-name" style="font-size: 18px; color: #222;">Carlos Silva</h3>
+                    <p id="profile-display-email" style="font-size: 13px; color: #666;">carlos.entregas@email.com</p>
+                </div>
+
+                <form id="profile-form" onsubmit="saveDriverProfile(event)">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="driver-name-input" style="font-size: 12px; color: #555; display: block; margin-bottom: 4px;"><i class="fas fa-user"></i> Nome Completo</label>
+                        <input type="text" id="driver-name-input" value="Carlos Silva" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px;" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="driver-email-input" style="font-size: 12px; color: #555; display: block; margin-bottom: 4px;"><i class="fas fa-envelope"></i> E-mail</label>
+                        <input type="email" id="driver-email-input" value="carlos.entregas@email.com" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px;" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="driver-phone-input" style="font-size: 12px; color: #555; display: block; margin-bottom: 4px;"><i class="fas fa-phone"></i> Telefone / WhatsApp</label>
+                        <input type="text" id="driver-phone-input" value="(54) 98888-7777" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px;" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="driver-vehicle-input" style="font-size: 12px; color: #555; display: block; margin-bottom: 4px;"><i class="fas fa-motorcycle"></i> Veículo / Placa</label>
+                        <input type="text" id="driver-vehicle-input" value="Honda CG 160 • ABC-1D23" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px;" required>
+                    </div>
+
+                    <button type="submit" class="btn-checkout" style="margin-top: 15px;">Salvar Alterações</button>
+                </form>
+            </div>
+        </main>
+
+        <!-- MODAL POP-UP DE NOVA OFERTA DE ENTREGA COM TIMER -->
+        <div id="delivery-offer-modal" class="modal-overlay hidden">
+            <div class="modal-card offer-card">
+                <div class="offer-header">
+                    <span class="badge-new-offer"><i class="fas fa-bolt"></i> Nova Oferta!</span>
+                    <div class="timer-circle" id="timer-display">15</div>
+                </div>
+
+                <div class="offer-body">
+                    <div class="offer-price-box">
+                        <span class="offer-label">Valor do Repasse</span>
+                        <h2 class="offer-price" id="offer-price-val">R$ 12,50</h2>
+                    </div>
+
+                    <div class="offer-details-list">
+                        <div class="offer-detail-item">
+                            <i class="fas fa-route"></i>
+                            <div>
+                                <strong>Distância Total:</strong>
+                                <span id="offer-distance-val">3.2 km</span>
+                            </div>
+                        </div>
+
+                        <div class="offer-detail-item">
+                            <i class="fas fa-store"></i>
+                            <div>
+                                <strong>Retiradas:</strong>
+                                <span id="offer-pickup-val">Multi-tendas</span>
+                            </div>
+                        </div>
+
+                        <div class="offer-detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Entrega (Cliente):</strong>
+                                <span id="offer-dropoff-val">Rua das Palmeiras, 450 - Centro</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions gap-10">
+                    <button type="button" class="btn-secondary" onclick="rejectDeliveryOffer()">Recusar</button>
+                    <button type="button" class="btn-primary-action" onclick="acceptDeliveryOffer()">Aceitar Entrega</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL POP-UP PARA CONFIRMAÇÃO DO CÓDIGO DO CLIENTE -->
+        <div id="confirm-code-modal" class="modal-overlay hidden">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <div>
+                        <h3>Finalizar Entrega</h3>
+                        <span class="modal-subtitle">Digite o código de 4 dígitos informado pelo cliente</span>
+                    </div>
+                    <button class="close-btn" onclick="closeConfirmCodeModal()">×</button>
+                </div>
+                
+                <form id="code-confirm-form" onsubmit="submitConfirmationCode(event)">
+                    <div class="form-group" style="margin: 15px 0;">
+                        <input type="text" id="client-code-input" maxlength="4" placeholder="Ex: 1234" 
+                               style="width: 100%; text-align: center; font-size: 24px; letter-spacing: 8px; padding: 12px; border: 2px solid #2e7d32; border-radius: 12px; font-weight: 700;" required>
+                        <small style="color: #777; font-size: 11px; display: block; text-align: center; margin-top: 6px;">Código padrão de teste: <strong>1234</strong></small>
+                    </div>
+
+                    <div class="modal-actions gap-10">
+                        <button type="button" class="btn-secondary" onclick="closeConfirmCodeModal()">Cancelar</button>
+                        <button type="submit" class="btn-primary-action">Confirmar Código</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL DE NOTIFICAÇÕES -->
+        <div id="notifications-modal" class="modal-overlay hidden" onclick="closeNotificationsModalOnOutside(event)">
+            <div class="modal-card notification-modal-card">
+                <div class="modal-header">
+                    <div>
+                        <h3><i class="fas fa-bell" style="color: #2e7d32; margin-right: 6px;"></i> Notificações</h3>
+                        <span class="modal-subtitle">Avisos e novidades do sistema</span>
+                    </div>
+                    <button class="close-btn" onclick="toggleNotificationsModal()">×</button>
+                </div>
+                <div id="notifications-list" class="notifications-list"></div>
+            </div>
+        </div>
+
+        <!-- TOAST / NOTIFICAÇÃO NATIVA -->
+        <div id="toast-notification" class="toast-notification hidden">
+            <div class="toast-content">
+                <i class="fas fa-check-circle"></i>
+                <span id="toast-message">Notificação</span>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Verde -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" data-target="home-screen">
+                <i class="fas fa-motorcycle"></i>
+                <span>Pedidos</span>
+            </a>
+            <a href="#" class="nav-item" data-target="history-screen">
+                <i class="fas fa-history"></i>
+                <span>Histórico</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="motoboy.js"></script>
+</body>
+</html>
