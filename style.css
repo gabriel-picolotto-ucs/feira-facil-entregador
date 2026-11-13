@@ -7,43 +7,45 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Trava a janela externa do navegador mobile */
+/* Deixa a página rolar normalmente */
 html, body {
-    position: fixed;
-    inset: 0;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
     background-color: #f4f6f8;
-    overscroll-behavior: none;
 }
 
-/* Estrutura de App Nativo em 3 linhas: Topo fixo | Meio rolável | Base fixa */
+/* Dá espaço no topo (74px) para o conteúdo não ficar escondido atrás do cabeçalho */
 .app-container {
     width: 100%;
     max-width: 430px;
-    height: 100%;
+    min-height: 100vh;
     margin: 0 auto;
     background-color: #f7f9fa;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    overflow: hidden;
+    padding-top: 74px;
+    padding-bottom: 80px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* ==================== HEADER PRINCIPAL FIXO ==================== */
+/* ==================== HEADER PRINCIPAL FIXO NO TOPO ==================== */
 .main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
     width: 100%;
+    max-width: 430px;
+    height: 74px;
     background-color: #2e7d32;
     color: #ffffff;
-    padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 16px 20px;
+    padding: 16px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
-    z-index: 30;
+    z-index: 9999;
 }
 
 .user-profile {
@@ -111,15 +113,10 @@ html, body {
     align-items: center;
 }
 
-/* ==================== SCREENS (APENAS O MIOLO ROLA) ==================== */
+/* ==================== SCREENS E CONTAINER ==================== */
 .screen {
     display: none;
     width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
     padding-top: 8px;
     padding-bottom: 24px;
 }
@@ -159,15 +156,15 @@ html, body {
     font-weight: 600;
 }
 
-/* ==================== BOTTOM NAV (RODAPÉ FIXO VERDE) ==================== */
+/* ==================== BOTTOM NAV (RODAPÉ) ==================== */
 .bottom-nav {
     width: 100%;
+    max-width: 430px;
     background-color: #2e7d32;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding-top: 10px;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    padding: 10px 0;
     z-index: 30;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
 }
@@ -357,7 +354,7 @@ input:checked + .slider:before { transform: translateX(22px); }
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 10000;
     padding: 20px;
 }
 
@@ -400,7 +397,7 @@ input:checked + .slider:before { transform: translateX(22px); }
 
 /* ==================== MODAL DE NOTIFICAÇÕES FORMATADO ==================== */
 .notification-modal-card {
-    max-height: 80dvh;
+    max-height: 80vh;
     display: flex;
     flex-direction: column;
 }
@@ -470,7 +467,7 @@ input:checked + .slider:before { transform: translateX(22px); }
 /* Toast */
 .toast-notification {
     position: fixed;
-    bottom: calc(75px + env(safe-area-inset-bottom, 0px));
+    bottom: 75px;
     left: 0;
     right: 0;
     margin: 0 auto;
@@ -481,7 +478,7 @@ input:checked + .slider:before { transform: translateX(22px); }
     padding: 10px 18px;
     border-radius: 25px;
     font-size: 12px;
-    z-index: 200;
+    z-index: 10001;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     white-space: nowrap;
 }
