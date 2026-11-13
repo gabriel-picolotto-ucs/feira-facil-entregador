@@ -28,7 +28,7 @@ html, body {
     margin: 0 auto;
     background-color: #f7f9fa;
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr auto;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
@@ -116,7 +116,6 @@ html, body {
     display: none;
     width: 100%;
     height: 100%;
-    min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
